@@ -5741,16 +5741,17 @@ public class TableApi {
 
   /**
    * Merge insert (upsert) records into a table Performs a merge insert (upsert) operation on table
-   * &#x60;id&#x60;. This operation updates existing rows based on a matching column and inserts new
-   * rows that don&#39;t match. It returns the number of rows inserted and updated. For tables that
-   * have been declared but not yet created on storage (is_only_declared&#x3D;true), this operation
-   * will create the table with the provided data (since there are no existing rows to merge with).
-   * REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the
-   * &#x60;MergeInsertIntoTableRequest&#x60; information in the following way: - &#x60;id&#x60;:
-   * pass through path parameter of the same name - &#x60;on&#x60;: pass through query parameter of
-   * the same name - &#x60;when_matched_update_all&#x60;: pass through query parameter of the same
-   * name - &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name
-   * - &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name -
+   * &#x60;id&#x60;. This operation updates existing rows based on one or more matching columns and
+   * inserts new rows that don&#39;t match. It returns the number of rows inserted and updated. For
+   * tables that have been declared but not yet created on storage (is_only_declared&#x3D;true),
+   * this operation will create the table with the provided data (since there are no existing rows
+   * to merge with). REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body.
+   * It passes in the &#x60;MergeInsertIntoTableRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;on&#x60;: pass through
+   * query parameter of the same name, repeated once per field path -
+   * &#x60;when_matched_update_all&#x60;: pass through query parameter of the same name -
+   * &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name -
+   * &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name -
    * &#x60;when_not_matched_by_source_delete&#x60;: pass through query parameter of the same name -
    * &#x60;when_not_matched_by_source_delete_filt&#x60;: pass through query parameter of the same
    * name
@@ -5759,11 +5760,12 @@ public class TableApi {
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param on Lance field path to use for matching rows. Nested fields use dot-separated segments;
-   *     use backtick-quoted segments for literal dots and double backticks inside quoted segments.
-   *     Use canonical full paths for display and errors; leaf names alone only identify top-level
-   *     fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
-   *     (required)
+   * @param on Lance field paths to use for matching rows. Repeat the parameter once per field to
+   *     match on a composite key; a row matches only when every listed field is equal. Nested
+   *     fields use dot-separated segments; use backtick-quoted segments for literal dots and double
+   *     backticks inside quoted segments. Use canonical full paths for display and errors; leaf
+   *     names alone only identify top-level fields; invalid or unresolved paths should return
+   *     InvalidInput or TableColumnNotFound. (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
@@ -5792,7 +5794,7 @@ public class TableApi {
    */
   public CompletableFuture<MergeInsertIntoTableResponse> mergeInsertIntoTable(
       String id,
-      String on,
+      List<String> on,
       byte[] body,
       String delimiter,
       String branch,
@@ -5845,16 +5847,17 @@ public class TableApi {
 
   /**
    * Merge insert (upsert) records into a table Performs a merge insert (upsert) operation on table
-   * &#x60;id&#x60;. This operation updates existing rows based on a matching column and inserts new
-   * rows that don&#39;t match. It returns the number of rows inserted and updated. For tables that
-   * have been declared but not yet created on storage (is_only_declared&#x3D;true), this operation
-   * will create the table with the provided data (since there are no existing rows to merge with).
-   * REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the
-   * &#x60;MergeInsertIntoTableRequest&#x60; information in the following way: - &#x60;id&#x60;:
-   * pass through path parameter of the same name - &#x60;on&#x60;: pass through query parameter of
-   * the same name - &#x60;when_matched_update_all&#x60;: pass through query parameter of the same
-   * name - &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name
-   * - &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name -
+   * &#x60;id&#x60;. This operation updates existing rows based on one or more matching columns and
+   * inserts new rows that don&#39;t match. It returns the number of rows inserted and updated. For
+   * tables that have been declared but not yet created on storage (is_only_declared&#x3D;true),
+   * this operation will create the table with the provided data (since there are no existing rows
+   * to merge with). REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body.
+   * It passes in the &#x60;MergeInsertIntoTableRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;on&#x60;: pass through
+   * query parameter of the same name, repeated once per field path -
+   * &#x60;when_matched_update_all&#x60;: pass through query parameter of the same name -
+   * &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name -
+   * &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name -
    * &#x60;when_not_matched_by_source_delete&#x60;: pass through query parameter of the same name -
    * &#x60;when_not_matched_by_source_delete_filt&#x60;: pass through query parameter of the same
    * name
@@ -5863,11 +5866,12 @@ public class TableApi {
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param on Lance field path to use for matching rows. Nested fields use dot-separated segments;
-   *     use backtick-quoted segments for literal dots and double backticks inside quoted segments.
-   *     Use canonical full paths for display and errors; leaf names alone only identify top-level
-   *     fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
-   *     (required)
+   * @param on Lance field paths to use for matching rows. Repeat the parameter once per field to
+   *     match on a composite key; a row matches only when every listed field is equal. Nested
+   *     fields use dot-separated segments; use backtick-quoted segments for literal dots and double
+   *     backticks inside quoted segments. Use canonical full paths for display and errors; leaf
+   *     names alone only identify top-level fields; invalid or unresolved paths should return
+   *     InvalidInput or TableColumnNotFound. (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
@@ -5897,7 +5901,7 @@ public class TableApi {
   public CompletableFuture<ApiResponse<MergeInsertIntoTableResponse>>
       mergeInsertIntoTableWithHttpInfo(
           String id,
-          String on,
+          List<String> on,
           byte[] body,
           String delimiter,
           String branch,
@@ -5957,7 +5961,7 @@ public class TableApi {
 
   private HttpRequest.Builder mergeInsertIntoTableRequestBuilder(
       String id,
-      String on,
+      List<String> on,
       byte[] body,
       String delimiter,
       String branch,
@@ -5998,7 +6002,7 @@ public class TableApi {
     localVarQueryParameterBaseName = "branch";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("branch", branch));
     localVarQueryParameterBaseName = "on";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("on", on));
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("multi", "on", on));
     localVarQueryParameterBaseName = "when_matched_update_all";
     localVarQueryParams.addAll(
         ApiClient.parameterToPairs("when_matched_update_all", whenMatchedUpdateAll));

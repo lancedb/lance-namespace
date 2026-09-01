@@ -1129,11 +1129,16 @@ paths:
       - $ref: "#/components/parameters/branch"
       - name: "on"
         in: query
-        description: Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+        description: Lance field paths to use for matching rows. Repeat the parameter once per field to match on a composite key; a row matches only when every listed field is equal. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
         required: true
+        style: form
+        explode: true
         schema:
-          type: string
-          minLength: 1
+          type: array
+          minItems: 1
+          items:
+            type: string
+            minLength: 1
       - name: "when_matched_update_all"
         in: query
         description: Update all columns when rows match
@@ -1188,7 +1193,7 @@ paths:
       description: |
         Performs a merge insert (upsert) operation on table `id`.
         This operation updates existing rows
-        based on a matching column and inserts new rows that don't match.
+        based on one or more matching columns and inserts new rows that don't match.
         It returns the number of rows inserted and updated.
 
         For tables that have been declared but not yet created on storage
@@ -1199,7 +1204,7 @@ paths:
         REST namespace uses Arrow IPC stream as the request body.
         It passes in the `MergeInsertIntoTableRequest` information in the following way:
         - `id`: pass through path parameter of the same name
-        - `on`: pass through query parameter of the same name
+        - `on`: pass through query parameter of the same name, repeated once per field path
         - `when_matched_update_all`: pass through query parameter of the same name
         - `when_matched_update_all_filt`: pass through query parameter of the same name
         - `when_not_matched_insert_all`: pass through query parameter of the same name
@@ -3056,9 +3061,12 @@ components:
           description: |
             Branch to target. When not specified, the main branch is used.
         "on":
-          description: Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
-          type: string
-          minLength: 1
+          description: Lance field paths to use for matching rows. Multiple fields form a composite match key; a row matches only when every listed field is equal. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+          type: array
+          minItems: 1
+          items:
+            type: string
+            minLength: 1
         when_matched_update_all:
           description: Update all columns when rows match
           type: boolean

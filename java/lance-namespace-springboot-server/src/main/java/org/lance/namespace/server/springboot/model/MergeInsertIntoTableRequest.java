@@ -44,7 +44,7 @@ public class MergeInsertIntoTableRequest {
 
   private String branch;
 
-  private String on;
+  @Valid private List<@Size(min = 1) String> on = new ArrayList<>();
 
   private Boolean whenMatchedUpdateAll = false;
 
@@ -173,13 +173,22 @@ public class MergeInsertIntoTableRequest {
     this.branch = branch;
   }
 
-  public MergeInsertIntoTableRequest on(String on) {
+  public MergeInsertIntoTableRequest on(List<@Size(min = 1) String> on) {
     this.on = on;
     return this;
   }
 
+  public MergeInsertIntoTableRequest addOnItem(String onItem) {
+    if (this.on == null) {
+      this.on = new ArrayList<>();
+    }
+    this.on.add(onItem);
+    return this;
+  }
+
   /**
-   * Lance field path to use for matching rows. Nested fields use dot-separated segments; use
+   * Lance field paths to use for matching rows. Multiple fields form a composite match key; a row
+   * matches only when every listed field is equal. Nested fields use dot-separated segments; use
    * backtick-quoted segments for literal dots and double backticks inside quoted segments. Use
    * canonical full paths for display and errors; leaf names alone only identify top-level fields;
    * invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
@@ -190,14 +199,14 @@ public class MergeInsertIntoTableRequest {
   @Schema(
       name = "on",
       description =
-          "Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.",
+          "Lance field paths to use for matching rows. Multiple fields form a composite match key; a row matches only when every listed field is equal. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("on")
-  public String getOn() {
+  public List<@Size(min = 1) String> getOn() {
     return on;
   }
 
-  public void setOn(String on) {
+  public void setOn(List<@Size(min = 1) String> on) {
     this.on = on;
   }
 
