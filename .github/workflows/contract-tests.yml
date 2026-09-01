@@ -1,0 +1,271 @@
+name: Contract Tests
+
+on:
+  push:
+    branches: [main, "feat/**", "feature/**"]
+    paths:
+      - "docs/src/spec.yaml"
+      - "docs/src/cts-contracts/**"
+      - "ci/**"
+      - "java/**"
+      - "python/**"
+      - "rust/**"
+      - ".github/workflows/contract-tests.yml"
+  pull_request:
+    paths:
+      - "docs/src/spec.yaml"
+      - "docs/src/cts-contracts/**"
+      - "ci/**"
+      - "java/**"
+      - "python/**"
+      - "rust/**"
+      - ".github/workflows/contract-tests.yml"
+  workflow_dispatch:
+    inputs:
+      run_wiremock:
+        description: "Run the legacy WireMock client-conformance matrix"
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─────────────────────────────────────────────────────────────
+  # Job 1: Spec validation — guards spec.yaml immutability,
+  #         runs Spectral lint, and checks for breaking changes.
+  # ─────────────────────────────────────────────────────────────
+  spec:
+    name: Spec Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # required for git diff in verify-spec-untouched
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify spec untouched
+        run: make verify-spec-untouched
+
+      - name: Lint spec with Spectral
+        run: |
+          mkdir -p build
+          npx --yes @stoplight/spectral-cli lint docs/src/spec.yaml \
+            --ruleset ci/spectral.yaml \
+            --fail-severity error \
+            --format junit \
+            --output build/spectral-report.xml
+
+      - name: Check breaking changes with oasdiff
+        uses: oasdiff/oasdiff-action/breaking@main
+        with:
+          base: "https://raw.githubusercontent.com/lance-format/lance-namespace/main/docs/src/spec.yaml"
+          revision: "docs/src/spec.yaml"
+          fail-on-diff: true
+
+      - name: Upload Spectral report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spectral-report
+          path: build/spectral-report.xml
+          if-no-files-found: ignore
+
+  # ─────────────────────────────────────────────────────────────
+  # Job 2: Server conformance (Schemathesis) — TEMPORARILY REMOVED
+  #
+  # Originally this job started the Spring Boot reference server under
+  # the pact profile and ran Schemathesis against it to verify spec
+  # conformance. It has been removed for now because the
+  # `lance-namespace-springboot-server` module currently only contains
+  # OpenAPI-generated API interfaces (NamespaceApi / TableApi /
+  # TransactionApi) — there is no @SpringBootApplication main class,
+  # no controller implementations, and no application.yml, so
+  # `java -jar ...` cannot actually start an HTTP server.
+  #
+  # Re-add this job in a follow-up PR once the springboot-server module
+  # ships a runnable reference server (Main class + stub controllers
+  # honoring spec response codes). The Schemathesis configuration in
+  # ci/schemathesis.toml is kept and already excludes the 3 Arrow IPC
+  # endpoints (CreateTable / InsertIntoTable / MergeInsertIntoTable
+  # using application/vnd.apache.arrow.stream) so it is ready to use
+  # as soon as the server exists.
+  # ─────────────────────────────────────────────────────────────
+
+  # ─────────────────────────────────────────────────────────────
+  # Job 3: Behavioural contract conformance — drives the spec-driven
+  #         CTS YAML bundle through the in-process Rust harness in
+  #         `rust/lance-namespace-cts` against `DirectoryNamespace`.
+  #         This is the primary PR-blocking signal; it covers behaviour
+  #         (state changes, error codes, capability gating) — not just
+  #         HTTP wire shape.  Runs on every push and PR.
+  # ─────────────────────────────────────────────────────────────
+  behavior-conformance:
+    name: Behaviour Conformance (Rust in-process)
+    runs-on: ubuntu-latest
+    needs: spec
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install Python workspace (loader/lint/codegen need pyyaml + jsonschema)
+        run: uv sync --all-packages
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      # `lance-namespace-cts` pulls in `lance-namespace-impls` from the sibling
+      # `lance` repository via cargo `path`, which transitively depends on
+      # `lance-encoding`.  `lance-encoding`'s build script invokes `protoc` to
+      # compile its `.proto` files, so the GitHub-hosted runner needs the
+      # protobuf compiler on PATH before we run `cargo test`.  Locally this
+      # works because contributors typically have `protoc` installed; CI does
+      # not, so we install it explicitly here.
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "27.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "rust -> rust/target"
+
+      - name: Lint contract bundle (strict)
+        run: uv run python ci/cts/lint_contracts.py --strict
+
+      - name: Verify generated tests are up-to-date
+        run: uv run python ci/cts/gen_contract_tests.py --check
+
+      - name: Run behavioural contract suite
+        run: make test-cts-behavior
+
+      - name: Upload behavioural test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-test-behavior
+          path: rust/lance-namespace-cts/target/nextest/**/*.xml
+          if-no-files-found: ignore
+
+  # ─────────────────────────────────────────────────────────────
+  # Job 4: Client conformance (legacy WireMock) — matrix over
+  #         java / python / rust.  Each language generates WireMock
+  #         stubs from the spec and runs its thin contract runner.
+  #
+  #         As of P5 (the CI-finalisation phase of the behavioural CTS rollout)
+  #         this job is **opt-in**: it runs on push to `main` only and
+  #         on manual workflow_dispatch with `run_wiremock=true`. It is
+  #         skipped on pull_request events and on push to feature
+  #         branches, to keep PR/dev-branch feedback focused on the
+  #         (much faster) behavioural job above.
+  # ─────────────────────────────────────────────────────────────
+  client-conformance:
+    name: Client Conformance (${{ matrix.lang }})
+    # Opt-in only: WireMock matrix is expensive (java + python + rust),
+    # so we restrict push triggering to `main` and otherwise require an
+    # explicit workflow_dispatch with run_wiremock=true.  PRs never run
+    # this job; the behavioural suite above is the PR-blocking signal.
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && inputs.run_wiremock)
+    runs-on: ubuntu-latest
+    needs: spec
+    strategy:
+      fail-fast: false          # each language fails/passes independently
+      matrix:
+        lang: [java, python, rust]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # ── Language-specific toolchain setup ──────────────────────
+      - name: Setup Java 17
+        if: matrix.lang == 'java'
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Setup Python
+        if: matrix.lang == 'python'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        if: matrix.lang == 'python'
+        uses: astral-sh/setup-uv@v3
+
+      - name: Setup Rust
+        if: matrix.lang == 'rust'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      # ── Shared: generate WireMock stubs + download jar ─────────
+      - name: Install uv (Python dep for overlay-gen)
+        if: matrix.lang != 'python'
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install Python workspace (overlay-gen needs pyyaml)
+        run: uv sync --all-packages
+
+      - name: Generate WireMock stubs
+        run: make gen-wiremock
+
+      - name: Download WireMock standalone jar
+        run: make build/cts/wiremock-standalone.jar
+
+      # ── Language-specific pre-build ────────────────────────────
+      - name: Build Java clients
+        if: matrix.lang == 'java'
+        run: |
+          cd java
+          ./mvnw -pl lance-namespace-apache-client,lance-namespace-async-client \
+            install -DskipTests --no-transfer-progress -q
+
+      - name: Install Python client
+        if: matrix.lang == 'python'
+        run: uv sync --all-packages
+
+      - name: Cache Rust build
+        if: matrix.lang == 'rust'
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "rust/lance-namespace-reqwest-client"
+
+      # ── Run contract tests ──────────────────────────────────────
+      - name: Run contract tests
+        run: make test-clients-wiremock-${{ matrix.lang }}
+
+      # ── Upload reports ──────────────────────────────────────────
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-test-${{ matrix.lang }}
+          path: |
+            java/**/target/surefire-reports/*.xml
+            build/reports/*.xml
+          if-no-files-found: ignore

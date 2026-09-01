@@ -1,0 +1,295 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Tag domain behavioural contracts.
+#
+# OpenAPI tag: TagApi.
+# Error source: errors.md › Tag Metadata Operations.
+#
+# DirectoryNamespace v6.0.0 does NOT implement any of the tag operations
+# (the trait defaults all return Unsupported (0)). Cases below therefore
+# all carry `requires_capabilities: [supports_table_tags]` so they are
+# skipped at runtime on DirectoryNamespace; lint-level coverage of the
+# error codes declared in errors.md still flows through `case.then`.
+
+contracts:
+  # ──────────────────────────────────────────────────────────────────
+  - operation: ListTableTags
+    requires_capabilities: [supports_table_tags]
+    cases:
+      - id: list_tags_on_nonexistent_table_must_404
+        description: |
+          ListTableTags for an unknown table surfaces TableNotFound (4).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+        then:
+          error_code: 4
+
+      - id: list_tags_namespace_not_found_must_404
+        description: |
+          On backends that distinguish missing namespace from missing
+          table, ListTableTags returns NamespaceNotFound (1) when the
+          parent namespace is unknown.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: GetTableTagVersion
+    requires_capabilities: [supports_table_tags]
+    cases:
+      - id: get_tag_version_on_nonexistent_table_must_404
+        description: |
+          GetTableTagVersion on an unknown table surfaces TableNotFound (4).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+            tag: "v1"
+        then:
+          error_code: 4
+
+      - id: get_tag_version_unknown_tag_must_404
+        description: |
+          On a real table without the requested tag, GetTableTagVersion
+          surfaces TableTagNotFound (8).
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            tag: "no_such_tag"
+        then:
+          error_code: 8
+
+      - id: get_tag_version_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+            tag: "v1"
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: CreateTableTag
+    requires_capabilities: [supports_table_tags]
+    cases:
+      - id: create_tag_on_nonexistent_table_must_404
+        description: |
+          CreateTableTag on an unknown table surfaces TableNotFound (4).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+            tag: "v1"
+            version: 1
+        then:
+          error_code: 4
+
+      - id: create_tag_already_exists_must_409
+        description: |
+          Recreating an existing tag surfaces TableTagAlreadyExists (9).
+          Backends without optimistic-concurrency semantics may not be
+          able to drive this state through the public API; the case is
+          therefore additionally gated behind
+          `enforces_optimistic_concurrency`.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            tag: "v1"
+            version: 1
+        then:
+          error_code: 9
+
+      - id: create_tag_unknown_version_must_404
+        description: |
+          CreateTableTag pointing at a version that does not exist
+          surfaces TableVersionNotFound (11).
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            tag: "v1"
+            version: 999
+        then:
+          error_code: 11
+
+      - id: create_tag_concurrent_modification_must_409
+        description: |
+          Two writers racing to create the same tag surface
+          ConcurrentModification (14) on backends with OCC.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            tag: "v1"
+            version: 1
+        then:
+          error_code: 14
+
+      - id: create_tag_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+            tag: "v1"
+            version: 1
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: DeleteTableTag
+    requires_capabilities: [supports_table_tags]
+    cases:
+      - id: delete_tag_on_nonexistent_table_must_404
+        description: |
+          DeleteTableTag on an unknown table surfaces TableNotFound (4).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+            tag: "v1"
+        then:
+          error_code: 4
+
+      - id: delete_tag_unknown_tag_must_404
+        description: |
+          DeleteTableTag for a tag that does not exist surfaces
+          TableTagNotFound (8).
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            tag: "no_such_tag"
+        then:
+          error_code: 8
+
+      - id: delete_tag_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+            tag: "v1"
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: UpdateTableTag
+    requires_capabilities: [supports_table_tags]
+    cases:
+      - id: update_tag_on_nonexistent_table_must_404
+        description: |
+          UpdateTableTag on an unknown table surfaces TableNotFound (4).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+            tag: "v1"
+            version: 2
+        then:
+          error_code: 4
+
+      - id: update_tag_unknown_tag_must_404
+        description: |
+          UpdateTableTag for an unknown tag surfaces TableTagNotFound (8).
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            tag: "no_such_tag"
+            version: 1
+        then:
+          error_code: 8
+
+      - id: update_tag_unknown_version_must_404
+        description: |
+          UpdateTableTag pointing at a missing version surfaces
+          TableVersionNotFound (11).
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            tag: "v1"
+            version: 999
+        then:
+          error_code: 11
+
+      - id: update_tag_concurrent_modification_must_409
+        description: |
+          Two writers racing to update the same tag surface
+          ConcurrentModification (14) on OCC backends.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            tag: "v1"
+            version: 2
+        then:
+          error_code: 14
+
+      - id: update_tag_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+            tag: "v1"
+            version: 2
+        then:
+          error_code: 1

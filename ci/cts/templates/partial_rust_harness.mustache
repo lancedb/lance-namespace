@@ -1,0 +1,78 @@
+// ---------------------------------------------------------------------------
+// WireMock singleton — one process shared across all tests in this binary.
+// ---------------------------------------------------------------------------
+
+struct WireMockServer {
+    port: u16,
+    _child: Child,
+}
+
+static WIREMOCK: OnceLock<WireMockServer> = OnceLock::new();
+
+/// Bind port 0 to obtain a free ephemeral port, then release the socket so
+/// WireMock can bind it.  There is a brief TOCTOU window; in practice it is
+/// negligible for local testing.
+fn free_port() -> u16 {
+    let listener = std::net::TcpListener::bind("127.0.0.1:0")
+        .expect("failed to bind port 0 for free-port allocation");
+    listener.local_addr().unwrap().port()
+}
+
+/// Obtain (or lazily start) the shared WireMock server.
+fn wiremock() -> &'static WireMockServer {
+    WIREMOCK.get_or_init(|| {
+        let jar = Path::new("../../build/cts/wiremock-standalone.jar");
+        let root_dir = Path::new("../../build/cts/wiremock/src/main/resources");
+
+        assert!(
+            jar.exists(),
+            "WireMock jar not found at {:?}. Run `make gen-cts-wiremock` first.",
+            jar
+        );
+
+        let port = free_port();
+
+        let child = Command::new("java")
+            .args([
+                "-jar",
+                jar.to_str().unwrap(),
+                "--root-dir",
+                root_dir.to_str().unwrap(),
+                "--port",
+                &port.to_string(),
+                "--no-request-journal",
+            ])
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .expect("Failed to spawn WireMock. Is `java` on PATH?");
+
+        wait_for_port(port, Duration::from_secs(30));
+
+        WireMockServer { port, _child: child }
+    })
+}
+
+/// Poll until the TCP port accepts connections or the deadline passes.
+fn wait_for_port(port: u16, timeout: Duration) {
+    let deadline = Instant::now() + timeout;
+    loop {
+        if TcpStream::connect(format!("127.0.0.1:{port}")).is_ok() {
+            return;
+        }
+        assert!(
+            Instant::now() < deadline,
+            "WireMock port {port} did not open within {timeout:?}"
+        );
+        std::thread::sleep(Duration::from_millis(200));
+    }
+}
+
+/// Build a Configuration pointing at the shared WireMock instance.
+fn make_config() -> Configuration {
+    let port = wiremock().port;
+    Configuration {
+        base_path: format!("http://localhost:{port}"),
+        ..Default::default()
+    }
+}

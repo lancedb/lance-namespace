@@ -1,0 +1,61 @@
+{{!
+    Renders one step of a multi-step `when:` block (or the synthesised
+    single step from a single-shot `when: { request: {...} }`).
+
+    Inputs (per-step bundle keys):
+      op                       — operation name (PascalCase).
+      op_method                — snake_case trait method name.
+      request_struct           — request struct identifier (PascalCase).
+      request_lit              — pre-rendered Rust struct literal (triple-mustache).
+      expected_codes           — comma-separated `u32` literal list incl. alternatives.
+      expects_ok               — true when `expect.status` is "ok"/2xx.
+      expects_error            — true when `expect.error_code` is set.
+      response_assertions      — list of {kind, value, response_assertion_*flag*}.
+
+    The intermediate `_resp` shadowing keeps response handles available
+    for `then.response_assertions` without forcing every caller to bind
+    a variable they don't need.
+}}
+{
+    let request: {{request_struct}} = {{{request_lit}}};
+    {{^takes_body}}
+    let _resp = fixtures.api().{{op_method}}(request).await;
+    {{/takes_body}}
+    {{#takes_body}}
+    let _resp = fixtures.api().{{op_method}}(request, {{{body_expr}}}).await;
+    {{/takes_body}}
+    {{#expects_ok}}
+    assert_contract_ok(&_resp);
+    {{/expects_ok}}
+    {{#expects_error}}
+    assert_contract_error(&_resp, &[{{expected_codes}}]);
+    {{/expects_error}}
+    {{#has_response_assertions}}
+    let _resp = _resp.expect("response_assertions require Ok response");
+    {{#response_assertions}}
+    {{#response_assertion_namespaces_count}}
+    assert_eq!(_resp.namespaces.len(), {{value}}usize);
+    {{/response_assertion_namespaces_count}}
+    {{#response_assertion_namespaces_contains}}
+    assert!(
+        _resp.namespaces.iter().any(|n| n == &{{{value_lit}}}.to_string()),
+        "expected namespaces list {:?} to contain {:?}",
+        _resp.namespaces, {{{value_lit}}}
+    );
+    {{/response_assertion_namespaces_contains}}
+    {{#response_assertion_tables_count}}
+    assert_eq!(_resp.tables.len(), {{value}}usize);
+    {{/response_assertion_tables_count}}
+    {{#response_assertion_tables_contains}}
+    assert!(
+        _resp.tables.iter().any(|n| n == &{{{value_lit}}}.to_string()),
+        "expected tables list {:?} to contain {:?}",
+        _resp.tables, {{{value_lit}}}
+    );
+    {{/response_assertion_tables_contains}}
+    {{#response_assertion_count_eq}}
+    assert_eq!(_resp, {{value}}i64);
+    {{/response_assertion_count_eq}}
+    {{/response_assertions}}
+    {{/has_response_assertions}}
+}

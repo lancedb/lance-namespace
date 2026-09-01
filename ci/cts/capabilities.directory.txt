@@ -1,0 +1,61 @@
+# In-tree DirectoryNamespace capability set —— matches §5.1.1 of
+# the behavioural-contract design notes (maintained outside this repo).
+#
+# This file is the *fallback* source of truth when no `LANCE_CTS_CAPABILITIES`
+# environment variable and no `cts.config.toml` are present.  The Rust
+# `Capabilities::from_env()` implementation reads it via
+# `include_str!("../../../ci/cts/capabilities.directory.txt")`.
+#
+# Format: one flag per line; `#` introduces a comment; blank lines ignored.
+
+# ─── path shape ────────────────────────────────────────────────────────────
+supports_one_level_namespace_path
+
+# DirectoryNamespace currently rejects multi-level paths in dir.rs;
+# enabling the next line would require it to also implement nested directory
+# traversal.  Keep it disabled for now.
+# supports_two_level_namespace_path
+
+# ─── namespace ops ─────────────────────────────────────────────────────────
+# Cascade is not implemented in dir.rs; restrict (the default) is.
+# supports_drop_namespace_cascade
+# supports_create_namespace_overwrite
+
+# ─── table ops (covered by dir.rs) ─────────────────────────────────────────
+supports_create_table
+supports_drop_table
+supports_register_table
+supports_deregister_table
+# alter_table_* (add / alter / drop / backfill columns) is NOT implemented
+# in v6.0.0's dir.rs — the trait default returns Unsupported (0). Re-enable
+# only after a Lance release wires those operations through.
+# supports_alter_table_columns
+
+# rename_table is *not* implemented in dir.rs (returns Unsupported).
+# supports_rename_table
+
+# ─── indices / tags / versions ─────────────────────────────────────────────
+supports_table_indices
+supports_table_versioning
+# Tags are not implemented.
+# supports_table_tags
+
+# ─── data ops ──────────────────────────────────────────────────────────────
+supports_table_data_read
+supports_table_data_write
+# update_table / delete_from_table not implemented.
+# supports_update_table
+# supports_delete_from_table
+
+# ─── transactions ──────────────────────────────────────────────────────────
+supports_transactions
+# alter_transaction not implemented.
+# supports_alter_transaction
+
+# ─── materialised views ────────────────────────────────────────────────────
+# refresh_materialized_view not implemented.
+# supports_materialized_view
+
+# ─── concurrency ───────────────────────────────────────────────────────────
+# DirectoryNamespace exhibits last-write-wins; do not assert OCC.
+# enforces_optimistic_concurrency

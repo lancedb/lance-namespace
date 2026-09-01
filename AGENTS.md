@@ -144,6 +144,15 @@ You can also run `make <command>-<language>-<module>` inside a language folder t
 - `make gen-rust-reqwest-client`: codegen and lint the Rust reqwest client module
 - `make build-java-springboot-server`: build the Java Spring Boot server module
 
+## Contract Tests
+
+Run the full contract test suite to verify spec compliance:
+```bash
+make test-cts
+```
+
+See [docs/spec-driven-contract-testing.md](docs/spec-driven-contract-testing.md) for details.
+
 ## Documentation
 
 ### Setup

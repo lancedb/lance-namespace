@@ -144,6 +144,91 @@ You can also run `make <command>-<language>-<module>` inside a language folder t
 - `make gen-rust-reqwest-client`: codegen and lint the Rust reqwest client module
 - `make build-java-springboot-server`: build the Java Spring Boot server module
 
+## Contract Tests (CTS)
+
+This repository ships **two** contract test suites; together they form the
+Compatibility Test Suite (CTS):
+
+| Suite | Source of truth | What it verifies | Driver | Default? |
+|---|---|---|---|---|
+| **Behavioural CTS** | `docs/src/cts-contracts/*.yaml` | Operation semantics: state transitions, error codes, capability gating | In-process Rust harness in `rust/lance-namespace-cts` against `DirectoryNamespace` | ✅ runs on every PR via `make test-cts` |
+| **WireMock CTS** | `docs/src/spec.yaml` | HTTP wire shape: paths, methods, status codes, JSON serde | Per-language thin runner (Java / Python / Rust) against a WireMock standalone jar | ⚠️ opt-in via `make test-cts-wiremock`; CI runs it on push to long-lived branches and on manual dispatch only |
+
+Design background and implementation progress notes for the behavioural
+CTS are maintained outside this repository (in the maintainer's working
+notes); the entry points below describe the **stable** authoring
+contract and should be sufficient to add cases without consulting them.
+
+### Authoring a Behavioural Contract Case
+
+1. **Pick the right domain file** under `docs/src/cts-contracts/`:
+   `namespace.yaml` / `table.yaml` / `data.yaml` / `index.yaml` /
+   `tag.yaml` / `transaction.yaml`. Each operation's contracts must
+   live in exactly one file (lint enforces this).
+2. **Write the case** in YAML using the schema in
+   `ci/cts/cts-contracts.schema.json`. A minimal shape is:
+   ```yaml
+   - id: drop_namespace_nonexistent_must_404
+     description: Dropping a non-existent namespace must surface
+                  NamespaceNotFound (4).
+     given:
+       state: empty_catalog
+     when:
+       request:
+         id: ["{{NsMissing}}"]
+     then:
+       error_code: 4
+   ```
+   Capabilities the case requires (e.g. `supports_table_tags`) go in
+   `requires_capabilities`; the harness skips the case at runtime
+   when an implementation does not advertise them.
+3. **Run lint locally**:
+   ```
+   uv run python ci/cts/lint_contracts.py --strict
+   ```
+   `--strict` checks that every `(operation, error_code)` row in
+   `docs/src/namespace/operations/errors.md` is covered by at least
+   one case. CI runs lint in `--strict` mode.
+4. **Regenerate the Rust test sources**:
+   ```
+       make gen-cts-behavior     # rewrites rust/lance-namespace-cts/tests/contracts/
+   ```
+   The generated files **are** checked in (so a fresh checkout
+   `cargo test`s without manual steps); CI verifies they are not stale
+   via `gen_contract_tests.py --check`.
+5. **Run the suite**:
+   ```
+   make test-cts-behavior    # cargo test -p lance-namespace-cts
+   ```
+   `SKIP: missing capabilities: [...]` lines indicate cases that an
+   implementation advertises it does not support — those are
+   informational, not failures.
+
+### Adding a New Operation Field or Capability
+
+- **New request field referenced by a case?** Extend
+  `_render_request_literal` in `ci/cts/gen_contract_tests.py` with
+  the field's optionality and Rust literal shape; mirror the
+  Mustache template `ci/cts/templates/rust_inproc_contract.mustache`
+  if a new request struct needs importing.
+- **New operation?** Register it in `_SUPPORTED_OPS` (also in
+  `gen_contract_tests.py`), add a forwarder method on
+  `ContractCaller` and `InProcessDirectoryCaller` in
+  `rust/lance-namespace-cts/src/caller.rs`, then write the YAML
+  cases. Lint + `--check` will tell you what is missing.
+- **New capability?** Add the ID to
+  `ci/cts/capabilities.directory.txt` (or whichever target's
+  capability file applies) and reference it from
+  `requires_capabilities` on cases.
+
+### When to Use the Legacy WireMock Suite
+
+Run `make test-cts-wiremock` (or `make test-clients-wiremock-{java,python,rust}`)
+when changing **client serialization** or **HTTP wire shape**. It is
+not a substitute for the behavioural suite for namespace
+implementations; behavioural contracts should always be authored
+under `docs/src/cts-contracts/`.
+
 ## Documentation
 
 ### Setup

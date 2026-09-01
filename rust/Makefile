@@ -30,6 +30,13 @@ gen-reqwest-client: clean-reqwest-client
 	rm -rf lance-namespace-reqwest-client/.gitignore
 	rm -rf lance-namespace-reqwest-client/.travis.yml
 	rm -rf lance-namespace-reqwest-client/git_push.sh
+	# The stock reqwest template emits ``req_builder.body(p_body)`` for
+	# binary request bodies without a ``Content-Type`` header, which trips
+	# servers that match on the Arrow IPC mime.  Inject the header for every
+	# Arrow-IPC operation declared in the spec.  Idempotent.
+	cd .. && uv run python ci/cts/patch_reqwest_arrow_content_type.py \
+	    --spec docs/src/spec.yaml \
+	    --client-dir rust/lance-namespace-reqwest-client
 
 .PHONY: build-reqwest-client
 build-reqwest-client: gen-reqwest-client

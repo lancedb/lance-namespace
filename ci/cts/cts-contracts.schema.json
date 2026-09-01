@@ -1,0 +1,252 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lancedb.github.io/lance-namespace/cts-contracts.schema.json",
+  "title": "Lance Namespace CTS Contracts",
+  "description": "JSON Schema for the YAML files under docs/src/cts-contracts/.\n\nThe entry file (main.yaml) declares the schema version, capability flags, and an ordered list of domain include files. Domain files (namespace.yaml, table.yaml, …) declare a flat list of `contracts:` entries.\n\nThe loader (ci/cts/contract_loader.py) merges main + domain files into a single bundle which is then handed to gen_contract_tests.py.",
+
+  "definitions": {
+    "operation_name": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Za-z0-9]+$",
+      "description": "OpenAPI operationId, e.g. CreateNamespace."
+    },
+
+    "case_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]+$",
+      "description": "Snake-case identifier unique within a contracts file."
+    },
+
+    "capability_flag": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]+$"
+    },
+
+    "namespace_id": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Namespace path; empty array = root."
+    },
+
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["namespace", "table"],
+          "description": "Resource type the harness must materialise via real API calls before the case body runs."
+        },
+        "id": { "$ref": "#/definitions/namespace_id" },
+        "namespace": { "$ref": "#/definitions/namespace_id" },
+        "name": { "type": "string" }
+      }
+    },
+
+    "given": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "type": "string",
+          "description": "Free-form symbolic name describing the precondition. Used as documentation; the harness reacts to `fixtures` only."
+        },
+        "fixtures": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/fixture" }
+        }
+      }
+    },
+
+    "request": {
+      "type": "object",
+      "description": "Request payload fed to the operation under test. Field names match the OpenAPI request body. The harness substitutes {{ns_*}} placeholders with unique strings minted by Fixtures.",
+      "additionalProperties": true
+    },
+
+    "expect": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "description": "Expected outcome: literal string `ok` or numeric HTTP status (the in-process caller treats any 2xx as `ok`).",
+          "oneOf": [
+            { "type": "string", "enum": ["ok"] },
+            { "type": "integer", "minimum": 100, "maximum": 599 }
+          ]
+        },
+        "error_code": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 21
+        },
+        "error_code_alternatives": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 21 }
+        }
+      }
+    },
+
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "request"],
+      "properties": {
+        "op": { "$ref": "#/definitions/operation_name" },
+        "request": { "$ref": "#/definitions/request" },
+        "expect": { "$ref": "#/definitions/expect" }
+      }
+    },
+
+    "when_single": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request"],
+      "properties": {
+        "request": { "$ref": "#/definitions/request" }
+      }
+    },
+
+    "when_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/step" }
+    },
+
+    "response_assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "namespaces_count",
+            "namespaces_contains",
+            "tables_count",
+            "tables_contains",
+            "count_eq"
+          ]
+        },
+        "value": {}
+      }
+    },
+
+    "then": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "oneOf": [
+            { "type": "string", "enum": ["ok"] },
+            { "type": "integer", "minimum": 100, "maximum": 599 }
+          ]
+        },
+        "error_code": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 21
+        },
+        "error_code_alternatives": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 21 }
+        },
+        "response_assertions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/response_assertion" }
+        }
+      }
+    },
+
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "given", "when"],
+      "properties": {
+        "id": { "$ref": "#/definitions/case_id" },
+        "description": { "type": "string" },
+        "requires_capabilities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/capability_flag" }
+        },
+        "given": { "$ref": "#/definitions/given" },
+        "when": {
+          "oneOf": [
+            { "$ref": "#/definitions/when_single" },
+            { "$ref": "#/definitions/when_steps" }
+          ]
+        },
+        "then": { "$ref": "#/definitions/then" },
+        "skip_reason": {
+          "type": "string",
+          "description": "When set, the case is intentionally not exercised; the linter still counts it for completeness coverage."
+        }
+      }
+    },
+
+    "operation_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation"],
+      "properties": {
+        "operation": { "$ref": "#/definitions/operation_name" },
+        "requires_capabilities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/capability_flag" }
+        },
+        "skip_reason": { "type": "string" },
+        "cases": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/case" }
+        }
+      }
+    },
+
+    "capability_decl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "#/definitions/capability_flag" },
+        "description": { "type": "string" }
+      }
+    }
+  },
+
+  "oneOf": [
+    {
+      "title": "main.yaml entrypoint",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "capabilities", "includes"],
+      "properties": {
+        "version": { "type": "integer", "minimum": 1 },
+        "capabilities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/capability_decl" }
+        },
+        "includes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*\\.yaml$"
+          }
+        }
+      }
+    },
+    {
+      "title": "domain file",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contracts"],
+      "properties": {
+        "contracts": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/operation_block" }
+        }
+      }
+    }
+  ]
+}

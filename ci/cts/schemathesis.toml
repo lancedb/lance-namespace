@@ -1,0 +1,66 @@
+# Schemathesis configuration for Lance Namespace server conformance testing.
+#
+# Schemathesis 4.x configuration format. See:
+#   https://schemathesis.readthedocs.io/en/stable/reference/configuration/
+#
+# Run via:
+#   schemathesis --config-file ci/cts/schemathesis.toml run build/spec.merged.yaml \
+#       --url http://localhost:8080
+#
+# Or via the Makefile target:
+#   make test-schemathesis BASE_URL=http://localhost:8080
+
+# --- Global / project-level settings ---
+
+# Number of concurrent workers. "auto" auto-adjusts based on CPU count.
+workers = "auto"
+
+# Suppress noisy hypothesis health checks for slow / large payload cases.
+suppress-health-check = ["too_slow", "data_too_large"]
+
+# --- Checks ---
+# Enable response schema conformance and other server-side conformance checks.
+# Cap response time per request at 10 seconds.
+[checks]
+max_response_time = 10.0
+
+# --- Test phases ---
+# Enable coverage / fuzzing / stateful phases (examples is enabled by default
+# when explicit examples are present in the schema).
+[phases.coverage]
+enabled = true
+
+[phases.fuzzing]
+enabled = true
+
+[phases.stateful]
+enabled = true
+
+# --- Data generation (formerly "hypothesis" section in 3.x) ---
+[generation]
+max-examples = 50
+
+# --- Operation-specific overrides ---
+#
+# Schemathesis cannot auto-serialize request bodies whose media type is
+# `application/vnd.apache.arrow.stream` (Arrow IPC stream). Without a custom
+# serializer, these endpoints surface as "Serialization not possible" errors
+# during fuzz/coverage runs. Until we register a dedicated Arrow IPC
+# serializer (or supply explicit examples), disable contract testing for the
+# three operations whose request bodies use this media type.
+#
+# Spec references (docs/src/spec.yaml):
+#   - InsertIntoTable        POST /v1/table/{id}/insert
+#   - MergeInsertIntoTable   POST /v1/table/{id}/merge_insert
+#   - CreateTable            POST /v1/table/{id}/create
+[[operations]]
+include-operation-id = "InsertIntoTable"
+enabled = false
+
+[[operations]]
+include-operation-id = "MergeInsertIntoTable"
+enabled = false
+
+[[operations]]
+include-operation-id = "CreateTable"
+enabled = false

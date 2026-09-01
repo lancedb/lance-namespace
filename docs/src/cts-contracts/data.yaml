@@ -1,0 +1,406 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Data domain behavioural contracts.
+#
+# OpenAPI tag: DataApi.
+# Error source: errors.md › Table Data Operations.
+#
+# Note: `InsertIntoTable`, `CountTableRows`, `CreateTable` and
+# `AlterTableAddColumns` are TableData ops in the OpenAPI sense but
+# they live in `table.yaml` because their happy-path fixtures are
+# table-shaped, not dataset-shaped. The cases here cover the read /
+# merge / update / delete / explain / analyze surface that the rest
+# of the table family does not own.
+#
+# DirectoryNamespace v6.0.0 implements:
+#   * MergeInsertIntoTable (write path with WhenMatched / WhenNotMatched).
+#   * QueryTable (vector + filter scan, returns Arrow IPC bytes).
+#   * ExplainTableQueryPlan / AnalyzeTableQueryPlan.
+#
+# It does NOT implement:
+#   * UpdateTable / DeleteFromTable (trait default → Unsupported 0).
+
+contracts:
+  # ──────────────────────────────────────────────────────────────────
+  - operation: MergeInsertIntoTable
+    requires_capabilities: [supports_table_data_write]
+    cases:
+      - id: merge_insert_missing_on_must_400
+        description: |
+          MergeInsertIntoTable requires the `on` field; missing it must
+          surface InvalidInput (13). dir.rs resolves the table first
+          and then enforces `on`, so the case requires an on-disk
+          table fixture to reach the `on` validation step.
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            request_data: empty
+        then:
+          error_code: 13
+
+      - id: merge_insert_into_nonexistent_table_must_404
+        description: |
+          With a valid `on`, MergeInsertIntoTable against an unknown
+          table surfaces TableNotFound (4) at table resolution.
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+            "on": "id"
+            request_data: empty
+        then:
+          error_code: 4
+
+      - id: merge_insert_unknown_column_in_filter_must_412
+        description: |
+          A `when_matched_update_all_filt` referencing a non-existent
+          column surfaces TableColumnNotFound (12). DirectoryNamespace
+          surfaces this via the dataset-level filter parser; gated
+          behind `enforces_optimistic_concurrency` because the exact
+          code is implementation-specific (e.g. some backends surface
+          this as 13 InvalidInput) and lint-level coverage is what we
+          care about here.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            "on": "id"
+            when_matched_update_all_filt: "no_such_column = 1"
+            request_data: empty
+        then:
+          error_code: 12
+
+      - id: merge_insert_concurrent_modification_must_409
+        description: |
+          Two concurrent merges into the same table surface
+          ConcurrentModification (14) on OCC backends.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            "on": "id"
+            request_data: empty
+        then:
+          error_code: 14
+
+      - id: merge_insert_invalid_state_must_409
+        description: |
+          MergeInsertIntoTable against a table in an invalid state
+          (e.g. mid-restoration) surfaces InvalidTableState (19).
+          DirectoryNamespace does not expose this state via the public
+          API; gated behind `enforces_optimistic_concurrency`.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            "on": "id"
+            request_data: empty
+        then:
+          error_code: 19
+
+      - id: merge_insert_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+            "on": "id"
+            request_data: empty
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: UpdateTable
+    requires_capabilities: [supports_update_table]
+    cases:
+      - id: update_table_unsupported_in_directory_namespace
+        description: |
+          UpdateTable is not implemented by dir.rs — the trait default
+          returns Unsupported (0). Backends that opt in via
+          `supports_update_table` instead skip this case (the
+          capability gate fires) and provide their own coverage of
+          codes 4 / 12 / 14 / 19 below.
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 0
+
+      - id: update_table_unknown_table_must_404
+        description: |
+          UpdateTable on an unknown table surfaces TableNotFound (4) on
+          backends that implement it. DirectoryNamespace skips via the
+          capability gate.
+        requires_capabilities: [supports_update_table]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 4
+
+      - id: update_table_unknown_column_must_412
+        description: |
+          UpdateTable referencing a non-existent column in `predicate`
+          surfaces TableColumnNotFound (12).
+        requires_capabilities: [supports_update_table]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            predicate: "no_such_column = 1"
+        then:
+          error_code: 12
+
+      - id: update_table_concurrent_modification_must_409
+        description: |
+          UpdateTable from two concurrent writers surfaces
+          ConcurrentModification (14) on OCC backends.
+        requires_capabilities: [supports_update_table, enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 14
+
+      - id: update_table_invalid_state_must_409
+        description: |
+          UpdateTable against a table in an invalid state surfaces
+          InvalidTableState (19).
+        requires_capabilities: [supports_update_table, enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 19
+
+      - id: update_table_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [supports_update_table, surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: DeleteFromTable
+    requires_capabilities: [supports_delete_from_table]
+    cases:
+      - id: delete_from_table_unsupported_in_directory_namespace
+        description: |
+          DeleteFromTable is not implemented by dir.rs — the trait
+          default returns Unsupported (0).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 0
+
+      - id: delete_from_table_unknown_table_must_404
+        description: |
+          DeleteFromTable on an unknown table surfaces TableNotFound (4).
+        requires_capabilities: [supports_delete_from_table]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 4
+
+      - id: delete_from_table_concurrent_modification_must_409
+        description: |
+          Concurrent deletes surface ConcurrentModification (14) on OCC
+          backends.
+        requires_capabilities: [supports_delete_from_table, enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 14
+
+      - id: delete_from_table_invalid_state_must_409
+        description: |
+          DeleteFromTable on a table in an invalid state surfaces
+          InvalidTableState (19).
+        requires_capabilities: [supports_delete_from_table, enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblA}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 19
+
+      - id: delete_from_table_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [supports_delete_from_table, surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+            predicate: "id = 1"
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: QueryTable
+    requires_capabilities: [supports_table_data_read]
+    cases:
+      - id: query_table_unknown_table_must_404
+        description: |
+          QueryTable on an unknown table surfaces TableNotFound (4).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+        then:
+          error_code: 4
+
+      - id: query_table_unknown_column_must_412
+        description: |
+          QueryTable with a `filter` referencing a non-existent column
+          surfaces TableColumnNotFound (12) at the scanner step.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+        then:
+          error_code: 12
+
+      - id: query_table_unknown_version_must_404
+        description: |
+          QueryTable with a non-existent `version` surfaces
+          TableVersionNotFound (11) when the dataset loader rejects the
+          requested version.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}"]
+            version: 999
+        then:
+          error_code: 11
+
+      - id: query_table_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: ExplainTableQueryPlan
+    requires_capabilities: [supports_table_data_read]
+    cases:
+      - id: explain_query_plan_unknown_table_must_404
+        description: |
+          ExplainTableQueryPlan on an unknown table surfaces
+          TableNotFound (4).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+        then:
+          error_code: 4
+
+      - id: explain_query_plan_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+        then:
+          error_code: 1
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: AnalyzeTableQueryPlan
+    requires_capabilities: [supports_table_data_read]
+    cases:
+      - id: analyze_query_plan_unknown_table_must_404
+        description: |
+          AnalyzeTableQueryPlan on an unknown table surfaces
+          TableNotFound (4).
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{TblMissing}}"]
+        then:
+          error_code: 4
+
+      - id: analyze_query_plan_namespace_not_found_must_404
+        description: |
+          See `ListTableTags.list_tags_namespace_not_found_must_404`.
+        requires_capabilities: [surfaces_namespace_not_found_for_table_ops]
+        given:
+          state: empty_catalog
+        when:
+          request:
+            id: ["{{NsMissing}}", "{{TblMissing}}"]
+        then:
+          error_code: 1

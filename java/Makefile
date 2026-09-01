@@ -60,6 +60,10 @@ gen-apache-client: clean-apache-client
 	rm -f lance-namespace-apache-client/pom.xml-e
 	rm -rf lance-namespace-apache-client/.openapi-generator-ignore
 	rm -rf lance-namespace-apache-client/.openapi-generator
+	# CTS: inject WireMock + JUnit engine/launcher + surefire IT include into the
+# generator-produced pom.xml so WireMockIT can compile and run.
+	cd .. && uv run python ci/cts/patch_apache_pom.py \
+	    java/lance-namespace-apache-client/pom.xml
 
 .PHONY: lint-apache-client
 lint-apache-client: gen-apache-client gen-springboot-server

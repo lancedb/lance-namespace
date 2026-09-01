@@ -414,6 +414,7 @@ public class ApiClient {
   public Duration getReadTimeout() {
     return readTimeout;
   }
+
   /**
    * Sets the connect timeout (in milliseconds) for the http client.
    *

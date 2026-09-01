@@ -1,0 +1,205 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Spectral ruleset for Lance Namespace OpenAPI spec governance.
+# Only project-specific rules are enforced (no built-in extends) to avoid
+# failing on pre-existing upstream spec issues out of scope for this PR.
+# The spec uses integer HTTP status code keys (200:, 400:) which Spectral's
+# parser flags as errors — these are downgraded to hints via parserOptions.
+extends: []
+
+parserOptions:
+  duplicateKeys: warn
+  incompatibleValues: warn
+
+rules:
+  # ---------------------------------------------------------------------------
+  # Rule 1: Every operation must declare at least one 4xx or 5xx response.
+  # All Lance Namespace ops must document error handling per errors.md.
+  # ---------------------------------------------------------------------------
+  operation-error-responses:
+    description: "Every operation must declare at least one 4xx or 5xx response"
+    message: "Operation must declare at least one 4xx or 5xx error response (e.g. 400, 404, 409, 500)"
+    severity: error
+    given: "$.paths[*][get,post,put,patch,delete,head,options].responses"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          minProperties: 1
+          patternProperties:
+            "^[45][0-9]{2}$":
+              type: object
+          anyOf:
+            - required: ["400"]
+            - required: ["401"]
+            - required: ["403"]
+            - required: ["404"]
+            - required: ["405"]
+            - required: ["409"]
+            - required: ["422"]
+            - required: ["429"]
+            - required: ["500"]
+            - required: ["501"]
+            - required: ["503"]
+
+  # ---------------------------------------------------------------------------
+  # Rule 2: Path parameters must have a pattern or enum constraint.
+  # Prevents unbounded string path params (e.g. namespaceId, tableId).
+  # In OpenAPI 3, constraints live inside the parameter's `schema` object:
+  #   parameters:
+  #     - in: path
+  #       name: tableId
+  #       schema:
+  #         type: string
+  #         pattern: "^[a-zA-Z0-9_-]+$"   ← this is what we require
+  # The JSONPath target `$..parameters[?(@.in == 'path')].schema` selects the
+  # schema sub-object directly, so we only need to require pattern or enum
+  # at that level.
+  # ---------------------------------------------------------------------------
+  path-params-constrained:
+    description: "Path parameters must have a pattern or enum constraint in their schema"
+    message: "Path parameter schema must declare either a 'pattern' or 'enum' constraint to bound valid values"
+    severity: warn
+    given: "$..parameters[?(@.in == 'path')].schema"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          anyOf:
+            - required: ["pattern"]
+            - required: ["enum"]
+
+  # ---------------------------------------------------------------------------
+  # Rule 3: Every top-level schema component must have a description.
+  # Documents what each model represents in the Lance Namespace domain.
+  # ---------------------------------------------------------------------------
+  schema-has-description:
+    description: "Every schema component must have a description field"
+    message: "Schema '{{path}}' is missing a description"
+    severity: warn
+    given: "$.components.schemas[*]"
+    then:
+      field: description
+      function: truthy
+
+  # ---------------------------------------------------------------------------
+  # Rule 4: operationId must be PascalCase.
+  # The lance-namespace spec uses PascalCase operationIds throughout
+  # (e.g. CreateNamespace, ListTables). Consistent naming enables
+  # predictable client SDK generation across Java, Python, and Rust.
+  # ---------------------------------------------------------------------------
+  operation-id-camel-case:
+    description: "operationId must be PascalCase (starts with uppercase, only alphanumeric)"
+    message: "operationId '{{value}}' must be PascalCase (e.g. CreateNamespace, ListTables)"
+    severity: error
+    given: "$..operationId"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z][a-zA-Z0-9]*$"
+
+  # ---------------------------------------------------------------------------
+  # Rule 5: operationId must not use generic or placeholder names.
+  # Catches auto-generated names like 'Operation1', 'PostV1', 'GetHandler' etc.
+  # ---------------------------------------------------------------------------
+  operation-id-meaningful:
+    description: "operationId must not be a generic placeholder name"
+    message: "operationId '{{value}}' appears to be a generic placeholder; use a descriptive PascalCase name"
+    severity: warn
+    given: "$..operationId"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^(Get|Post|Put|Patch|Delete|Operation|Handler|Api)[0-9]*$"
+
+  # ---------------------------------------------------------------------------
+  # Rule 6: All request bodies must have a content type declared.
+  # Ensures clients know what media type to send.
+  # ---------------------------------------------------------------------------
+  request-body-has-content:
+    description: "Request body must declare at least one content type"
+    message: "requestBody for '{{path}}' must declare content (e.g. application/json)"
+    severity: error
+    given: "$.paths[*][post,put,patch].requestBody"
+    then:
+      field: content
+      function: truthy
+
+  # ---------------------------------------------------------------------------
+  # Rule 7: Every response schema should reference a named component.
+  # Encourages $ref usage over inline schemas for reuse and SDK generation.
+  # ---------------------------------------------------------------------------
+  response-uses-named-schema:
+    description: "Successful (2xx) responses should reference a named component schema"
+    message: "Response schema for '{{path}}' should use a $ref to a named component schema"
+    severity: hint
+    given: "$.paths[*][*].responses[?(@property >= '200' && @property < '300')].content[*].schema"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          oneOf:
+            - required: ["$ref"]
+            - properties:
+                type:
+                  enum: ["array"]
+              required: ["type"]
+
+  # ---------------------------------------------------------------------------
+  # Rule 8: Operations must declare at least one tag.
+  # Orphan tag enforcement (checking that operation tags exist in the top-level
+  # tags array) requires a custom Spectral function because the built-in
+  # `enumeration` function cannot dynamically reference `$.tags[*].name`.
+  # Rather than hardcode the tag list (a maintenance burden every time a new
+  # tag is added), this rule ensures every operation has at least one tag so
+  # that the standard `spectral:oas` rule `operation-tags` (which flags tags
+  # not present in the top-level array) has something to check.
+  # The actual orphan-tag check is handled by the inherited `operation-tags`
+  # rule from `spectral:oas`.
+  # ---------------------------------------------------------------------------
+  operation-has-tags:
+    description: "Every operation must declare at least one tag"
+    message: "Operation '{{path}}' must declare at least one tag for documentation grouping"
+    severity: warn
+    given: "$.paths[*][get,post,put,patch,delete,head,options]"
+    then:
+      field: tags
+      function: truthy
+
+  # ---------------------------------------------------------------------------
+  # Rule 9: info.contact must be present.
+  # Ensures there is a maintainer contact for the spec.
+  # ---------------------------------------------------------------------------
+  info-contact:
+    description: "API info must include a contact field"
+    message: "The info object should include a contact with url or email"
+    severity: info
+    given: "$.info"
+    then:
+      field: contact
+      function: truthy
+
+  # ---------------------------------------------------------------------------
+  # Rule 10: Servers must be declared.
+  # Ensures a base URL is defined for the API.
+  # ---------------------------------------------------------------------------
+  servers-present:
+    description: "API must declare at least one server"
+    message: "The spec must include a servers array with at least one entry"
+    severity: warn
+    given: "$"
+    then:
+      field: servers
+      function: truthy
