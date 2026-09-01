@@ -124,11 +124,11 @@ The implementation:
 ```json
 {
   "namespaces": ["analytics", "ml", "reporting"],
-  "next_page_token": "abc123"
+  "page_token": "abc123"
 }
 ```
 
-The `next_page_token` field is only present if there are more results.
+The `page_token` field is only present if there are more results.
 
 **Error Handling:**
 
@@ -283,11 +283,11 @@ The implementation:
 ```json
 {
   "tables": ["users", "orders", "products"],
-  "next_page_token": "def456"
+  "page_token": "def456"
 }
 ```
 
-The `next_page_token` field is only present if there are more results.
+The `page_token` field is only present if there are more results.
 
 **Error Handling:**
 
