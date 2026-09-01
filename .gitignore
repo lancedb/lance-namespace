@@ -54,6 +54,7 @@ dist/
 .python-version
 
 .idea
+*.iml
 cmake-build-*
 .vscode
 .DS_Store
