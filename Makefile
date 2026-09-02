@@ -18,13 +18,25 @@ lint:
 clean-rust:
 	cd rust; make clean
 
+.PHONY: clean-typescript
+clean-typescript:
+	cd typescript; make clean
+
 .PHONY: sync gen-rust
 gen-rust:
 	cd rust; make gen
 
+.PHONY: gen-typescript
+gen-typescript:
+	cd typescript; make gen
+
 .PHONY: build-rust
 build-rust:
 	cd rust; make build
+
+.PHONY: build-typescript
+build-typescript:
+	cd typescript; make build
 
 .PHONY: clean-python
 clean-python:
@@ -63,10 +75,10 @@ sync:
 	uv sync --all-packages
 
 .PHONY: clean
-clean: clean-rust clean-python clean-java
+clean: clean-rust clean-python clean-java clean-typescript
 
 .PHONY: gen
-gen: lint gen-rust gen-python gen-java
+gen: lint gen-rust gen-python gen-java gen-typescript
 
 .PHONY: build
-build: lint build-docs build-rust build-python build-java
+build: lint build-docs build-rust build-python build-java build-typescript
